@@ -1,7 +1,7 @@
 import os
 from tkinter import *
 
-__version__ = '0.1a'
+__version__ = '0.1b'
 
 root = Tk()
 root.title("QO-100 v" + __version__)
