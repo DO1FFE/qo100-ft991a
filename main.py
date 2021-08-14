@@ -1,6 +1,7 @@
 import os
-from tkinter import *
 import tkinter.font as font
+from tkinter import *
+
 import serial
 
 __version__ = '0.1c'
