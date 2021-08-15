@@ -4,7 +4,7 @@ from tkinter import *
 
 import serial
 
-__version__ = '0.1c'
+__version__ = '0.1d'
 ser = serial.Serial('COM1', 9600, timeout=1)
 
 try:
@@ -15,7 +15,7 @@ except:
 
 root = Tk()
 root.title("QO-100 v" + __version__)
-root.geometry("250x150")
+# root.geometry("300x150")
 root.resizable(width=False, height=False)
 
 
@@ -47,8 +47,8 @@ def sdr_console():
     console_button.config(state=DISABLED)
     normal_button.config(state=DISABLED)
     qo100_button.config(state=DISABLED)
+    label2.config(text="SDR-Console geöffnet! - Bitte manuell schließen!")
     os.system('"C:\Program Files\SDR-Radio.com (V3)\SDR Console.exe"')
-    label2.config(text="SDR-Console geöffnet!")
     console_button.config(state=ACTIVE)
     qo100_button.config(state=DISABLED)
     normal_button.config(state=ACTIVE)
@@ -57,27 +57,27 @@ def sdr_console():
 tabellenbreite = 3
 
 # Copyright-Label
-label1 = Label(root, text="QO-100 v" + __version__)
-label1_2 = Label(root, text="\xa9 08/2021 by DO1FFE")
+label1 = Label(root, text="QO-100 Steuerung v" + __version__)
+label1_2 = Label(root, text="Software: \xa9 08/2021 by DO1FFE\nHardware: \xa9 08/2021 by DO7GJ")
 myFont = font.Font(size=20)
 label1['font'] = myFont
 label1.grid(row=0, column=0, columnspan=tabellenbreite)
 label1_2.grid(row=1, column=0, columnspan=tabellenbreite)
 
 # Button für Normal-Betrieb
-normal_button = Button(root, text="Normal", command=normal)
+normal_button = Button(root, text="Normal", pady=10, padx=50, command=normal)
 normal_button.config(state=DISABLED)
 normal_button.grid(row=2, column=0, pady=10, padx=10)
 
 
 # Button für QO-100 Betrieb
-qo100_button = Button(root, text="QO-100", command=qo100)
+qo100_button = Button(root, text="QO-100", pady=10, padx=50, command=qo100)
 qo100_button.config(state=ACTIVE)
 qo100_button.grid(row=2, column=1, padx=10)
 
 
 # Button für SDR-Console starten
-console_button = Button(root, text="SDR-Console", command=sdr_console)
+console_button = Button(root, text="SDR-Console", pady=10, padx=50, command=sdr_console)
 console_button.config(state=DISABLED)
 console_button.grid(row=2, column=2, padx=10)
 
