@@ -1,11 +1,36 @@
 import os
 import tkinter.font as font
 from tkinter import *
-
 import serial
+import smtplib
+from email.message import EmailMessage
+import time
 
-__version__ = '0.1d'
+__version__ = '0.1e'
 ser = serial.Serial('COM1', 9600, timeout=1)
+
+
+# Email Alerts
+def email_alert(body):
+    now = time.strftime("%d.%m.%Y %H:%M:%S - ", time.localtime(time.time()))
+    body = str(now+body)
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['subject'] = 'QO-100 Alert!'
+    msg['to'] = 'do1ffe@darc.de'
+
+    user = "es110178@gmail.com"
+    password = "qeyfxdorutqxgolm!"
+
+    msg['from'] = f"DL0HDB-Alert <{user}>"
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(user, password)
+    server.send_message(msg)
+    server.quit()
+
+
+email_alert("Das QO-100 Programm wurde gestartet...")
 
 try:
     ser.open()
@@ -21,6 +46,7 @@ root.resizable(width=False, height=False)
 
 # Prozedur für QO-100 Button
 def qo100():
+    email_alert("Der QO-100 Button wurde benutzt...")
     # print(ser.name)
     ser.write(b'FA432431000;OS00;CT00;MD02;PC005;')
     # ret = ser.readline()
@@ -33,6 +59,7 @@ def qo100():
 
 # Prozedur für Normal Button
 def normal():
+    email_alert("Der NORMAL Button wurde benutzt...")
     # print(ser.name)
     ser.write(b'MC003;PC010;')
     # ret = ser.readline()
@@ -44,6 +71,7 @@ def normal():
 
 
 def sdr_console():
+    email_alert("Die SDR-Console wurde gestartet...")
     console_button.config(state=DISABLED)
     normal_button.config(state=DISABLED)
     qo100_button.config(state=DISABLED)
@@ -87,3 +115,4 @@ label2.grid(row=3, column=0, columnspan=tabellenbreite, pady=10)
 
 root.mainloop()
 ser.close()
+email_alert("Das QO-100 Programm wurde beendet...")
