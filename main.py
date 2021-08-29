@@ -5,9 +5,11 @@ import serial
 import smtplib
 from email.message import EmailMessage
 import time
+import dotenv
 
-__version__ = '0.1e'
+__version__ = '0.1f'
 ser = serial.Serial('COM1', 9600, timeout=1)
+dotenv.load_dotenv()
 
 
 # Email Alerts
@@ -19,8 +21,8 @@ def email_alert(body):
     msg['subject'] = 'QO-100 Alert!'
     msg['to'] = 'do1ffe@darc.de'
 
-    user = "es110178@gmail.com"
-    password = "qeyfxdorutqxgolm!"
+    user = os.getenv('user')
+    password = os.getenv('password')
 
     msg['from'] = f"DL0HDB-Alert <{user}>"
     server = smtplib.SMTP("smtp.gmail.com", 587)
