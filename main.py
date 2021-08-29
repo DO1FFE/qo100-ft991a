@@ -6,9 +6,13 @@ import smtplib
 from email.message import EmailMessage
 import time
 import dotenv
+from settings import *
 
-__version__ = '0.1f'
-ser = serial.Serial('COM1', 9600, timeout=1)
+__version__ = '0.1g'
+#
+# Einstellungen ausschließlich in der Datei settings.py und .env machen!
+#
+ser = serial.Serial(com_port, baudrate, timeout=1)
 dotenv.load_dotenv()
 
 
@@ -50,7 +54,12 @@ root.resizable(width=False, height=False)
 def qo100():
     email_alert("Der QO-100 Button wurde benutzt...")
     # print(ser.name)
-    ser.write(b'FA432431000;OS00;CT00;MD02;PC005;')
+    qo100list = ''
+    for command in qo100_cat:
+        qo100list = qo100list + command + ';'
+
+    # ser.write(b'FA432431000;OS00;CT00;MD02;PC005;')
+    ser.write(b + qo100list)
     # ret = ser.readline()
     # print(ret)
     label2.config(text="QO-100 Betrieb geschaltet!")
@@ -63,7 +72,12 @@ def qo100():
 def normal():
     email_alert("Der NORMAL Button wurde benutzt...")
     # print(ser.name)
-    ser.write(b'MC003;PC010;')
+    normallist = ''
+    for command in normal_cat:
+        normallist = normallist + command + ';'
+
+    # ser.write(b'MC003;PC010;')
+    ser.write(b + normallist)
     # ret = ser.readline()
     # print(ret)
     label2.config(text="NORMAL Betrieb geschaltet!")
