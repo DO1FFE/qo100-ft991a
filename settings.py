@@ -11,7 +11,8 @@ qo100_cat = {
     'MD02': 'MODE auf USB',
     'PC005': 'Sendeleistung auf 5W',
     'EX140010' : 'Maximale Sendeleistung auf 10W begrenzen',
-    'LK1' : 'LOCK einschalten'
+    'LK1' : 'LOCK einschalten',
+    'MG030' : 'MIC GAIN auf 30'
 }
 
 normal_cat = {
@@ -19,5 +20,6 @@ normal_cat = {
     'MC003': 'Memory Channel 003',
     'PC010': 'Sendeleistung auf 10W',
     'EX140020' : 'Maximale Sendeleistung auf 20W begrenzen',
-    'LK1' : 'LOCK einschalten'
+    'LK1' : 'LOCK einschalten',
+    'MG070' : 'MIC GAIN auf 70'
 }
