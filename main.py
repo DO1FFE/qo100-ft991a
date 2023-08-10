@@ -4,6 +4,7 @@ from tkinter import messagebox
 from serial import *
 from settings import *
 
+# Versionsnummer des Programms
 __version__ = '0.1i'
 
 # COM-Port definieren
