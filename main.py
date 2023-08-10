@@ -1,62 +1,53 @@
-# import os
 import tkinter.font as font
 from tkinter import *
+from tkinter import messagebox
 from serial import *
 from settings import *
 
-__version__ = '0.1h'
+__version__ = '0.1i'
 
-#
-# Einstellungen ausschließlich in der Datei settings.py machen!
-#
-#
 # COM-Port definieren
 ser = Serial(com_port, baudrate, timeout=1)
 
 # Versuchen, COM-Port zu öffnen
 try:
     ser.open()
-# Wenn COM-Port schon offen, dann einmal schließen und neu öffnen.
 except:
-    ser.close()
-    ser.open()
+    try:
+        ser.close()
+        ser.open()
+    except Exception as e:
+        messagebox.showerror("Fehler", f"Konnte COM-Port nicht öffnen: {str(e)}")
 
 # GUI erstellen
 root = Tk()
 root.title("QO-100 v" + __version__)
-# root.geometry("300x150")
 root.resizable(width=False, height=False)
 
+def execute_cat_commands(commands: dict):
+    cmd_list = ''
+    for command in commands:
+        cmd_list += command + ';'
+    try:
+        ser.write(bytes(cmd_list.encode('ascii')))
+    except Exception as e:
+        messagebox.showerror("Fehler", f"Konnte Befehl nicht senden: {str(e)}")
 
 # Prozedur für QO-100 Button
 def qo100():
-    qo100list = ''
-    for command in qo100_cat:
-        qo100list = qo100list + command + ';'
-
-    # ser.write(b'FA432431000;OS00;CT00;MD02;PC005;')
-    ser.write(bytes(qo100list.encode('ascii')))
-
+    execute_cat_commands(qo100_cat)
     label2.config(text="QO-100 Betrieb geschaltet!")
     console_button.config(state=ACTIVE)
     qo100_button.config(state=DISABLED)
     normal_button.config(state=ACTIVE)
 
-
 # Prozedur für Normal Button
 def normal():
-    normallist = ''
-    for command in normal_cat:
-        normallist = normallist + command + ';'
-
-    # ser.write(b'MC003;PC010;')
-    ser.write(bytes(normallist.encode('ascii')))
-
+    execute_cat_commands(normal_cat)
     label2.config(text="NORMAL Betrieb geschaltet!")
     console_button.config(state=DISABLED)
     normal_button.config(state=DISABLED)
     qo100_button.config(state=ACTIVE)
-
 
 # Prozedur für Start der SDR-Console
 def sdr_console():
@@ -64,17 +55,19 @@ def sdr_console():
     normal_button.config(state=DISABLED)
     qo100_button.config(state=DISABLED)
     label2.config(text="SDR-Console geöffnet! - Bitte manuell schließen!")
-    os.system('"C:\Program Files\SDR-Radio.com (V3)\SDR Console.exe"')
+    try:
+        os.system(sdr_console_path)
+    except Exception as e:
+        messagebox.showerror("Fehler", f"Konnte SDR-Console nicht öffnen: {str(e)}")
     console_button.config(state=ACTIVE)
     qo100_button.config(state=DISABLED)
     normal_button.config(state=ACTIVE)
-
 
 tabellenbreite = 3
 
 # Copyright-Label
 label1 = Label(root, text="QO-100 Steuerung v" + __version__)
-label1_2 = Label(root, text="Software: \xa9 09/2021 by DO1FFE\nHardware: \xa9 08/2021 by DO7GJ")
+label1_2 = Label(root, text="Software: © 08/2023 by DO1FFE\nHardware: © 08/2021 by DO7GJ")
 myFont = font.Font(size=20)
 label1['font'] = myFont
 label1.grid(row=0, column=0, columnspan=tabellenbreite)
@@ -101,5 +94,9 @@ label2.grid(row=3, column=0, columnspan=tabellenbreite, pady=10)
 
 # Programmschleife
 root.mainloop()
+
 # COM-Port wieder schließen
-ser.close()
+try:
+    ser.close()
+except Exception as e:
+    messagebox.showerror("Fehler", f"Konnte COM-Port nicht schließen: {str(e)}")
