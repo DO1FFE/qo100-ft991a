@@ -1,7 +1,10 @@
 # Settings für QO-100 Programm
-#
+
 com_port = 'COM1'  # COM-Port für CAT, der verwendet werden soll.
 baudrate = 9600  # Baudrate für CAT
+
+# Pfad zur SDR-Console
+sdr_console_path = '"C:\\Program Files\\SDR-Radio.com (V3)\\SDR Console.exe"'
 
 qo100_cat = {
     # CAT-Befehl :  Beschreibung
