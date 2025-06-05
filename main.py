@@ -2,14 +2,29 @@ import os
 import tkinter as tk
 import tkinter.font as font
 from tkinter import messagebox
+import configparser
 import serial
-import settings
 
 # Versionsnummer des Programms
 __version__ = '0.1i'
 
+# Einstellungen einlesen
+config = configparser.ConfigParser()
+config.read('settings.ini', encoding='utf-8')
+
+com_port = config.get("general", "com_port", fallback="COM1")
+baudrate = config.getint("general", "baudrate", fallback=9600)
+sdr_console_path = config.get("general", "sdr_console_path", fallback="")
+
+qo100_cat = (
+    [cmd for cmd, _ in config.items("qo100_cat")] if "qo100_cat" in config else []
+)
+normal_cat = (
+    [cmd for cmd, _ in config.items("normal_cat")] if "normal_cat" in config else []
+)
+
 # COM-Port definieren
-ser = serial.Serial(settings.com_port, settings.baudrate, timeout=1)
+ser = serial.Serial(com_port, baudrate, timeout=1)
 
 # Versuchen, COM-Port zu öffnen
 try:
@@ -43,7 +58,7 @@ def execute_cat_commands(commands: dict):
 
 # Prozedur für QO-100 Button
 def qo100():
-    execute_cat_commands(settings.qo100_cat)
+    execute_cat_commands(qo100_cat)
     label2.config(text="QO-100 Betrieb geschaltet!")
     console_button.config(state=tk.ACTIVE)
     qo100_button.config(state=tk.DISABLED)
@@ -52,7 +67,7 @@ def qo100():
 
 # Prozedur für Normal Button
 def normal():
-    execute_cat_commands(settings.normal_cat)
+    execute_cat_commands(normal_cat)
     label2.config(text="NORMAL Betrieb geschaltet!")
     console_button.config(state=tk.DISABLED)
     normal_button.config(state=tk.DISABLED)
@@ -66,7 +81,7 @@ def sdr_console():
     qo100_button.config(state=tk.DISABLED)
     label2.config(text="SDR-Console geöffnet! - Bitte manuell schließen!")
     try:
-        os.system(settings.sdr_console_path)
+        os.system(sdr_console_path)
     except Exception as e:
         messagebox.showerror(
             "Fehler", f"Konnte SDR-Console nicht öffnen: {str(e)}"
