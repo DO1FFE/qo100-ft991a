@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import messagebox
 from serial import *
 from settings import *
+import os
 
 # Versionsnummer des Programms
 __version__ = '0.1i'
